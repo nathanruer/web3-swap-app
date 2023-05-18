@@ -27,10 +27,12 @@ const Swap: React.FC<SwapProps> = ({
         <TokenInput 
           token={tokenIn}
           modal={selectTokenInModal}
+          label="You buy"
         />
         <TokenInput 
           token={tokenOut}
           modal={selectTokenOutModal}
+          label="You sell"
         />
 
         <SelectTokensInModal 

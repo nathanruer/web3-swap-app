@@ -40,7 +40,7 @@ const SelectTokensOutModal: React.FC<SeelectTokensOutModalProps> = ({
   const bodyContent = (
     <div>
       {allTokens.map((token: any) => (
-        <div>
+        <div key={token.id}>
           <button
             onClick={() => handleClick('to', token)}
             className='p-1.5 text-md'

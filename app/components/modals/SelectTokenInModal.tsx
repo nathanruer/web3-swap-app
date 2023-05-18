@@ -41,7 +41,7 @@ const SelectTokenInModal: React.FC<SelectTokenInModalProps> = ({
   const bodyContent = (
     <div>
       {allTokens.map((token: any) => (
-        <div>
+        <div key={token.id}>
           <button
             onClick={() => handleClick("from", token)}
             className='p-1.5 text-md'
