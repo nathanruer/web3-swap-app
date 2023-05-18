@@ -6,16 +6,16 @@ import { useCallback } from "react";
 
 
 import Modal from "./Modal";
-import useSelectTokensInModal from '@/app/hooks/useSelectTokensInModal';
+import useSelectTokensInModal from '@/app/hooks/useSelectTokenInModal';
 
 import { Token } from "@/app/types/Token";
 
-interface SeelectTokensInModalProps {
+interface SelectTokenInModalProps {
   allTokens: Token[];
 }
 
-const SelectTokensInModal: React.FC<SeelectTokensInModalProps> = ({
-  allTokens
+const SelectTokenInModal: React.FC<SelectTokenInModalProps> = ({
+  allTokens,
 }) => {
   const selectTokensModal = useSelectTokensInModal();
 
@@ -43,10 +43,12 @@ const SelectTokensInModal: React.FC<SeelectTokensInModalProps> = ({
       {allTokens.map((token: any) => (
         <div>
           <button
-            onClick={() => handleClick('from', token)}
+            onClick={() => handleClick("from", token)}
+            className='p-1.5 text-md'
           >
             {token.name} ({token.symbol})
           </button>
+          <hr className='border-[#31343d]' />
         </div>
       ))}
     </div>
@@ -62,4 +64,4 @@ const SelectTokensInModal: React.FC<SeelectTokensInModalProps> = ({
   );
 };
 
-export default SelectTokensInModal;
+export default SelectTokenInModal;

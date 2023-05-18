@@ -1,7 +1,7 @@
 import getTokenByAddress from "./actions/getTokenByAddress";
 import getAllTokens from "./actions/getAllTokens";
 import { IPathParams } from "./types/IPathParams";
-import TokensDisplay from "./components/TokensDisplay";
+import Swap from "./components/Swap";
 
 interface HomeProps {
   searchParams: IPathParams
@@ -20,7 +20,7 @@ const Home = async ({ searchParams }: HomeProps) => {
 
   return (
     <div>
-      <TokensDisplay
+      <Swap
         tokenIn={tokenFrom}
         tokenOut={tokenTo}
         allTokens={allTokens}

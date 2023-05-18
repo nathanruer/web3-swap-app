@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
 
 import Modal from "./Modal";
-import useSelectTokensOutModal from '@/app/hooks/useSelectTokensOutModal';
+import useSelectTokensOutModal from '@/app/hooks/useSelectTokenOutModal';
 
 import { Token } from "@/app/types/Token";
 
@@ -43,9 +43,11 @@ const SelectTokensOutModal: React.FC<SeelectTokensOutModalProps> = ({
         <div>
           <button
             onClick={() => handleClick('to', token)}
+            className='p-1.5 text-md'
           >
             {token.name} ({token.symbol})
           </button>
+          <hr className='border-[#31343d]' />
         </div>
       ))}
     </div>

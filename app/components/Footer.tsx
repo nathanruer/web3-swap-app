@@ -5,7 +5,7 @@ import { FaHeart, FaGithub, FaTwitter } from 'react-icons/fa';
 const Footer = () => {
   return (
     <div className="pt-20 pb-10 px-10">
-      <div className="container mx-auto flex items-center justify-between">
+      <div className="mx-auto flex items-center justify-between">
         <div className="text-lg font-bold">
           Made with <FaHeart className="text-white inline-block" />
         </div>

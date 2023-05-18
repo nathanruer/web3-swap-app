@@ -1,16 +1,16 @@
 import { create } from 'zustand';
 
-interface SelectTokensOutModalStore {
+interface SelectTokenOutModalStore {
   isOpen: boolean;
   onOpen: () => void;
   onClose: () => void;
 }
 
-const useSelectTokensOutModal = create<SelectTokensOutModalStore>((set) => ({
+const useSelectTokenOutModal = create<SelectTokenOutModalStore>((set) => ({
   isOpen: false,
   onOpen: () => set({ isOpen: true }),
   onClose: () => set({ isOpen: false })
 }));
 
 
-export default useSelectTokensOutModal;
+export default useSelectTokenOutModal;
