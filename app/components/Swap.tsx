@@ -44,7 +44,7 @@ const Swap: React.FC<SwapProps> = ({
         <TokenInput
           token={tokenIn}
           modal={selectTokenInModal}
-          label="You buy"
+          label="You sell"
           amount={amountIn}
           handleAmountChange={handleAmountInChange}
           priceCoingecko={priceCoingeckoIn}
@@ -53,7 +53,7 @@ const Swap: React.FC<SwapProps> = ({
         <TokenInput
           token={tokenOut}
           modal={selectTokenOutModal}
-          label="You sell"
+          label="You buy"
           amount={amountOut}
           handleAmountChange={handleAmountOutChange}
           priceCoingecko={priceCoingeckoOut}
