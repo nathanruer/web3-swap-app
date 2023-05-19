@@ -51,15 +51,15 @@ const Modal: React.FC<ModalProps> = ({
           ${showModal ? 'opacity-100' : 'opacity-0'}
           `}>
             <div className="translate h-full lg:h-auto md:h-auto 
-             rounded-3xl shadow-3xl relative flex flex-col 
+            rounded-3xl relative flex flex-col 
             w-full outline-none focus:outline-none
             bg-[#1A1B1F]">
-              <div className="flex items-center p-6 rounded-t
+              <div className="flex items-center p-3 rounded-t
               justify-center relative">
                 <div className="text-lg font-semibold text-white">
                   {title}
                 </div>
-                <button className="p-1 border-0 hover:scale-110
+                <button className="border-0 hover:scale-110
                 transition absolute right-9"
                 onClick={handleClose}>
                   <IoMdClose 
@@ -70,7 +70,7 @@ const Modal: React.FC<ModalProps> = ({
                 </button>
               </div>
 
-              <div className="flex flex-col gap-2 p-6">
+              <div className="flex flex-col gap-2 p-3">
                 {body}
               </div>
             </div>
