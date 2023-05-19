@@ -3,11 +3,15 @@
 import { useState, useEffect } from "react";
 import { Token } from "../types/Token";
 
+import { useBalance } from "wagmi";
+
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 
 import { fetchPriceCoingecko } from "../actions/fetchPriceCoingecko";
 
 interface TokenInputProps {
+  isConnected: boolean;
+  userAddress: `0x${string}` | undefined
   token?: Token | null;
   modal: any;
   label: string;
@@ -18,6 +22,8 @@ interface TokenInputProps {
 }
 
 const TokenInput: React.FC<TokenInputProps> = ({
+  isConnected,
+  userAddress,
   token,
   modal,
   label,
@@ -27,6 +33,13 @@ const TokenInput: React.FC<TokenInputProps> = ({
   handlePriceCoingeckoChange
 }) => {
   const [isFocus, setIsFocus] = useState(false);
+
+  //TODO: FIX ERROR WHEN TOKEN UNDEFINED
+  const { data: tokenBalance } = useBalance({
+    address: userAddress,
+    token: `0x${token?.address.slice(2)}`,
+    onError() {},
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -67,9 +80,16 @@ const TokenInput: React.FC<TokenInputProps> = ({
               {token ? token.symbol : "Select Token"} <MdOutlineKeyboardArrowDown />
             </button>
           </div>
-          {token && (amount !== undefined && amount !== 0) &&
-            <p className="text-gray-400 font-semibold text-xs px-2 py-1">~${priceCoingecko}</p>
-          }
+            {token && (
+              <div className={`flex ${amount ? "justify-between" : "justify-end"}`}>
+                {amount ? (
+                  <p className="px-2 mt-2 text-gray-400 font-semibold text-xs">~${priceCoingecko}</p>
+                ) : null}
+                {isConnected ? (
+                  <p className="px-2 mt-2 text-gray-400 text-xs">Balance : {tokenBalance?.formatted}</p>
+                ) : null}
+              </div>
+            )}
         </div>
       </div>
 
@@ -96,9 +116,16 @@ const TokenInput: React.FC<TokenInputProps> = ({
               className="w-full px-2 py-1 rounded-xl bg-transparent text-white text-2xl"
             />
           </div>
-          {token && (amount !== undefined && amount !== 0) &&
-            <p className="text-gray-400 font-semibold text-xs px-2 py-1">~${priceCoingecko}</p>
-          }
+          {token && (
+            <div className={`flex ${amount ? "justify-between" : "justify-end"}`}>
+              {amount ? (
+                <p className="px-2 mt-2 text-gray-400 font-semibold text-xs">~${priceCoingecko}</p>
+              ) : null}
+              {isConnected ? (
+                <p className="px-2 mt-2 text-gray-400 text-xs">Balance : {tokenBalance?.formatted}</p>
+              ) : null}
+            </div>
+          )}
         </div>
       </div>
     </div>
