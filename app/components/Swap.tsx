@@ -34,49 +34,28 @@ const Swap: React.FC<SwapProps> = ({
   const selectTokenOutModal = useSelectTokenOutModal();
 
   const [amountIn, setAmountIn] = useState<number | undefined>();
-  const handleAmountInChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseFloat(e.target.value);
-    setAmountIn(isNaN(value) ? undefined : value);
-  };
   const [priceCoingeckoIn, setPriceCoingeckoIn] = useState("");
 
   const [amountOut, setAmountOut] = useState<number | undefined>();
-  const handleAmountOutChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseFloat(e.target.value);
-    setAmountOut(isNaN(value) ? undefined : value);
-  };
   const [priceCoingeckoOut, setPriceCoingeckoOut] = useState("")
 
   const router = useRouter();
   const params = useSearchParams();
   const handleSwitch = useCallback((tokenIn: Token | null | undefined, tokenOut: Token | null | undefined) => {
-    const currentQuery = qs.parse(params.toString());
+    const { from, to, ...currentQuery } = qs.parse(params.toString());
     let updatedQuery: any = {};
-    if (tokenIn && tokenOut) {
-      updatedQuery = {
-        ...currentQuery,
-        from: tokenOut?.address,
-        to: tokenIn?.address,
-      };
-    } else if (tokenIn && !tokenOut) {
-      updatedQuery = {
-        ...currentQuery,
-        from: undefined,
-        to: tokenIn?.address,
-      };
-    } else if (!tokenIn && tokenOut) {
-      updatedQuery = {
-        ...currentQuery,
-        from: tokenOut?.address,
-        to: undefined,
-      };
+    if (tokenIn) {
+      updatedQuery.to = tokenIn.address;
+    }
+    if (tokenOut) {
+      updatedQuery.from = tokenOut.address;
     }
     const url = qs.stringifyUrl({
       url: '/',
-      query: updatedQuery,
+      query: { ...currentQuery, ...updatedQuery },
     }, { skipNull: true });
     router.push(url);
-  }, [router, params]);
+  }, [router, params]);  
   
 
   return (
@@ -89,7 +68,7 @@ const Swap: React.FC<SwapProps> = ({
           modal={selectTokenInModal}
           label="You sell"
           amount={amountIn}
-          handleAmountChange={handleAmountInChange}
+          setAmount={setAmountIn}
           priceCoingecko={priceCoingeckoIn}
           handlePriceCoingeckoChange={setPriceCoingeckoIn}
         />
@@ -109,7 +88,7 @@ const Swap: React.FC<SwapProps> = ({
           modal={selectTokenOutModal}
           label="You buy"
           amount={amountOut}
-          handleAmountChange={handleAmountOutChange}
+          setAmount={setAmountOut}
           priceCoingecko={priceCoingeckoOut}
           handlePriceCoingeckoChange={setPriceCoingeckoOut}
         />

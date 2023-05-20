@@ -16,7 +16,7 @@ interface TokenInputProps {
   modal: any;
   label: string;
   amount: number | undefined;
-  handleAmountChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  setAmount: (value: number | undefined) => void;
   priceCoingecko: string;
   handlePriceCoingeckoChange: (e: string) => void;
 }
@@ -28,7 +28,7 @@ const TokenInput: React.FC<TokenInputProps> = ({
   modal,
   label,
   amount,
-  handleAmountChange,
+  setAmount,
   priceCoingecko,
   handlePriceCoingeckoChange
 }) => {
@@ -52,6 +52,19 @@ const TokenInput: React.FC<TokenInputProps> = ({
     };
     fetchData();
   }, [token, amount]);
+
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseFloat(e.target.value);
+    setAmount(isNaN(value) ? undefined : value);
+  };
+
+  const handleMaxBalance = () => {
+    if (tokenBalance) {
+      const formattedBalance: string | undefined = tokenBalance?.formatted;
+      const balanceNumber: number | undefined = formattedBalance ? parseFloat(formattedBalance) : undefined;
+      setAmount(balanceNumber)
+    }
+  }
 
   return (
     <div>
@@ -86,7 +99,15 @@ const TokenInput: React.FC<TokenInputProps> = ({
                   <p className="px-2 mt-2 text-gray-400 font-semibold text-xs">~${priceCoingecko}</p>
                 ) : null}
                 {isConnected ? (
-                  <p className="px-2 mt-2 text-gray-400 text-xs">Balance : {tokenBalance?.formatted}</p>
+                  <div className="flex px-2 mt-2 text-xs gap-2">
+                    <p className="text-gray-400">
+                      Balance : {tokenBalance?.formatted}
+                    </p>
+                    <button className="text-violet-500 hover:opacity-80 transition"
+                    onClick={handleMaxBalance}>
+                      Max
+                    </button>
+                  </div>
                 ) : null}
               </div>
             )}
@@ -122,7 +143,15 @@ const TokenInput: React.FC<TokenInputProps> = ({
                 <p className="px-2 mt-2 text-gray-400 font-semibold text-xs">~${priceCoingecko}</p>
               ) : null}
               {isConnected ? (
-                <p className="px-2 mt-2 text-gray-400 text-xs">Balance : {tokenBalance?.formatted}</p>
+                <div className="flex px-2 mt-2 text-xs gap-2">
+                  <p className="text-gray-400">
+                    Balance : {tokenBalance?.formatted}
+                  </p>
+                  <button className="text-violet-500 hover:opacity-80 transition"
+                  onClick={handleMaxBalance}>
+                    Max
+                  </button>
+                </div>
               ) : null}
             </div>
           )}
