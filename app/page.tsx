@@ -2,6 +2,9 @@ import getTokenByAddress from "./actions/getTokenByAddress";
 import getAllTokens from "./actions/getAllTokens";
 import { IPathParams } from "./types/IPathParams";
 import Swap from "./components/Swap";
+import ClientOnly from "./components/ClientOnly";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
 interface HomeProps {
   searchParams: IPathParams
@@ -20,11 +23,15 @@ const Home = async ({ searchParams }: HomeProps) => {
 
   return (
     <div>
-      <Swap
-        tokenIn={tokenFrom}
-        tokenOut={tokenTo}
-        allTokens={allTokens}
-      />
+      <ClientOnly >
+        <Navbar />
+        <Swap
+          tokenIn={tokenFrom}
+          tokenOut={tokenTo}
+          allTokens={allTokens}
+        />
+        <Footer />
+      </ClientOnly>
     </div>
   )
 }

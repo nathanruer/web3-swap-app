@@ -11,9 +11,6 @@ import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 import { Chain } from 'wagmi/chains';
 
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
-
 const localhostChain: Chain = {
   id: 31337,
   name: 'Localhost',
@@ -77,9 +74,7 @@ export default function RootLayout({
               accentColorForeground: 'black',
             })}
           >
-            <Navbar />
             {children}
-            <Footer />
           </RainbowKitProvider>
         </WagmiConfig>
       </body>

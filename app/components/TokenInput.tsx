@@ -35,7 +35,7 @@ const TokenInput: React.FC<TokenInputProps> = ({
   const [isFocus, setIsFocus] = useState(false);
 
   //TODO: FIX ERROR WHEN TOKEN UNDEFINED
-  const { data: tokenBalance } = useBalance({
+  const { data: tokenBalance, isLoading: isTokenBalanceLoading } = useBalance({
     address: userAddress,
     token: `0x${token?.address.slice(2)}`,
     onError() {},
@@ -71,7 +71,7 @@ const TokenInput: React.FC<TokenInputProps> = ({
       {/* SM SCREENS */}
       <div className="hidden sm:block">
         <div
-          className={`p-3 justify-center text-black rounded-xl mb-1 bg-[#141619]
+          className={`p-3 justify-center rounded-xl mb-1 bg-[#141619]
           ${isFocus ? "border border-white" : ""}`}
         >
           <p className="text-gray-400 font-semibold text-xs px-2 py-1">{label}</p>
@@ -99,14 +99,20 @@ const TokenInput: React.FC<TokenInputProps> = ({
                   <p className="px-2 mt-2 text-gray-400 font-semibold text-xs">~${priceCoingecko}</p>
                 ) : null}
                 {isConnected ? (
-                  <div className="flex px-2 mt-2 text-xs gap-2">
-                    <p className="text-gray-400">
-                      Balance : {tokenBalance?.formatted}
-                    </p>
-                    <button className="text-violet-500 hover:opacity-80 transition"
-                    onClick={handleMaxBalance}>
-                      Max
-                    </button>
+                  <div className="px-2 mt-2 text-xs">
+                    <div className="text-gray-400">
+                      {isTokenBalanceLoading ? (
+                        <p>Balance loading...</p>
+                      ) : 
+                      <div className="flex gap-2">
+                        <p>Balance : {tokenBalance?.formatted}</p>
+                        <button className="text-violet-500 hover:opacity-80 transition"
+                        onClick={handleMaxBalance}>
+                          Max
+                        </button>
+                      </div>
+                      }
+                    </div>
                   </div>
                 ) : null}
               </div>
@@ -143,14 +149,20 @@ const TokenInput: React.FC<TokenInputProps> = ({
                 <p className="px-2 mt-2 text-gray-400 font-semibold text-xs">~${priceCoingecko}</p>
               ) : null}
               {isConnected ? (
-                <div className="flex px-2 mt-2 text-xs gap-2">
-                  <p className="text-gray-400">
-                    Balance : {tokenBalance?.formatted}
-                  </p>
-                  <button className="text-violet-500 hover:opacity-80 transition"
-                  onClick={handleMaxBalance}>
-                    Max
-                  </button>
+                <div className="px-2 mt-2 text-xs">
+                  <div className="text-gray-400">
+                    {isTokenBalanceLoading ? (
+                      <p>Balance loading...</p>
+                    ) : 
+                    <div className="flex gap-2">
+                      <p>Balance : {tokenBalance?.formatted}</p>
+                      <button className="text-violet-500 hover:opacity-80 transition"
+                      onClick={handleMaxBalance}>
+                        Max
+                      </button>
+                    </div>
+                    }
+                  </div>
                 </div>
               ) : null}
             </div>

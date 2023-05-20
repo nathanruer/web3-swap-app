@@ -8,6 +8,7 @@ interface ModalProps {
   onClose: () => void;
   title?: string;
   body?: React.ReactElement;
+  head?: React.ReactElement;
   disabled?: boolean;
 }
 
@@ -16,6 +17,7 @@ const Modal: React.FC<ModalProps> = ({
   onClose, 
   title, 
   body, 
+  head,
   disabled,
 }) => {
   const [showModal, setShowModal] = useState(isOpen);
@@ -41,40 +43,23 @@ const Modal: React.FC<ModalProps> = ({
 
   return (
     <>
-      <div className="justify-center items-center flex 
-      overflow-x-hidden overflow-y-auto fixed inset-0 
-      z-50 outline-none focus:outline-none bg-black/50">
-        <div className="relative w-full md:w-4/6 lg:w-3/6
-        my-6 mx-auto h-full lg:h-auto md:h-auto">
-          <div className={`translate duration-300 h-full
-          ${showModal ? 'translate-y-0' : 'translate-y-full'}
-          ${showModal ? 'opacity-100' : 'opacity-0'}
-          `}>
-            <div className="translate h-full lg:h-auto md:h-auto 
-            rounded-3xl relative flex flex-col 
-            w-full outline-none focus:outline-none
-            bg-[#1A1B1F]">
-              <div className="flex items-center p-3 rounded-t
-              justify-center relative">
-                <div className="text-lg font-semibold text-white">
-                  {title}
-                </div>
-                <button className="border-0 hover:scale-110
-                transition absolute right-9"
-                onClick={handleClose}>
-                  <IoMdClose 
-                    size={30} 
-                    color="white"
-                    className="bg-zinc-800 rounded-full shadow-2xl p-1.5 font-bold"
-                  />
-                </button>
-              </div>
-
-              <div className="flex flex-col gap-2 p-3">
-                {body}
-              </div>
+      <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+        <div className="w-3/4 md:w-2/4 bg-[#1A1B1F] rounded-xl">
+          <div className="flex items-center justify-between p-3 rounded-t-xl">
+            <div className="text-lg font-semibold text-white flex-1 text-center">{title}</div>
+              <button className="hover:scale-110 transition"
+              onClick={handleClose}>
+                <IoMdClose
+                  size={35}
+                  color="white"
+                  className="bg-zinc-800 rounded-full shadow-2xl px-2 font-bold"
+                />
+              </button>
             </div>
+          <div className="px-3 mb-3">
+            {head}
           </div>
+          <div className="px-4 mb-3 max-h-[50vh] overflow-y-auto custom-scrollbar">{body}</div>
         </div>
       </div>
     </>

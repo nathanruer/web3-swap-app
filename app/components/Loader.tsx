@@ -4,7 +4,7 @@ import { HashLoader } from "react-spinners";
 
 const Loader = () => {
   return ( 
-    <div className="h-[70vh] flex flex-col justify-center items-center">
+    <div className="h-screen w-screen flex flex-col justify-center items-center">
       <HashLoader 
         size={150}
         color="#6528c6"

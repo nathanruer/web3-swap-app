@@ -7,7 +7,7 @@ export async function fetchPriceCoingecko(cryptoId: string, amount: number): Pro
     
     if (data && data[cryptoId] && data[cryptoId].usd) {
       const price = amount * data[cryptoId].usd;
-      const formattedPrice = price.toLocaleString(undefined, { maximumFractionDigits: 0 });
+      const formattedPrice = price.toLocaleString(undefined, { maximumFractionDigits: 8 });
       return formattedPrice;
     }
     

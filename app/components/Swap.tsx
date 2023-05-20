@@ -99,8 +99,8 @@ const Swap: React.FC<SwapProps> = ({
             Swap
           </button>
         ) : (
-          <button className="flex justify-center w-full mt-4 py-2.5 bg-[#141619]
-          rounded-xl hover:opacity-80 transition"
+          <button className="flex justify-center w-full mt-4 py-2.5 bg-white
+          text-[#141619] font-bold rounded-xl hover:opacity-80 transition"
           onClick={openConnectModal}>
             Connect Wallet
           </button>

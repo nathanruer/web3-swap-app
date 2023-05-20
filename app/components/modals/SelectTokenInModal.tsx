@@ -52,26 +52,28 @@ const SelectTokenInModal: React.FC<SelectTokenInModalProps> = ({
     );
   });
 
+  const headContent = (
+    <div className={`bg-[#141619] rounded-xl border hover:border-white transition
+    ${isInputFocused ? 'border-white ' : 'border-[#31343d]'}`}>
+      <input
+        type="text"
+        placeholder="Search... (Symbol or Address)"
+        className="p-1.5 w-full"
+        value={searchValue}
+        onChange={handleSearchChange}
+        onFocus={() => setIsInputFocused(true)}
+        onBlur={() => setIsInputFocused(false)}
+      />
+    </div>
+  )
+
   const bodyContent = (
     <div>
-      <div className={`bg-[#141619] rounded-xl mb-4 border hover:border-white transition
-      ${isInputFocused ? 'border-white ' : 'border-[#31343d]'}`}>
-        <input
-          type="text"
-          placeholder="Search... (Symbol or Address)"
-          className="p-1.5 my-1.5 w-full"
-          value={searchValue}
-          onChange={handleSearchChange}
-          onFocus={() => setIsInputFocused(true)}
-          onBlur={() => setIsInputFocused(false)}
-        />
-      </div>
-
       {filteredTokens.map((token: any) => (
         <div key={token.id}>
           <button
             onClick={() => handleClick("from", token)}
-            className='p-1.5 text-md'
+            className='py-1.5 text-md'
           >
             {token.name} ({token.symbol})
           </button>
@@ -86,6 +88,7 @@ const SelectTokenInModal: React.FC<SelectTokenInModalProps> = ({
       isOpen={selectTokensModal.isOpen}
       onClose={selectTokensModal.onClose}
       title="Select token"
+      head={headContent}
       body={bodyContent}
     />
   );
