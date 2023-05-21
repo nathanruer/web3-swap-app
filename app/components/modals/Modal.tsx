@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { IoMdClose } from "react-icons/io";
 
 interface ModalProps {
@@ -12,14 +12,15 @@ interface ModalProps {
   disabled?: boolean;
 }
 
-const Modal: React.FC<ModalProps> = ({ 
-  isOpen, 
-  onClose, 
-  title, 
-  body, 
+const Modal: React.FC<ModalProps> = ({
+  isOpen,
+  onClose,
+  title,
+  body,
   head,
   disabled,
 }) => {
+  const modalRef = useRef<HTMLDivElement>(null);
   const [showModal, setShowModal] = useState(isOpen);
 
   useEffect(() => {
@@ -34,8 +35,24 @@ const Modal: React.FC<ModalProps> = ({
     setShowModal(false);
     setTimeout(() => {
       onClose();
-    }, 300)
+    }, 300);
   }, [onClose, disabled]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+        handleClose();
+      }
+    };
+
+    if (showModal) {
+      document.addEventListener("click", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [showModal, handleClose]);
 
   if (!isOpen) {
     return null;
@@ -44,11 +61,15 @@ const Modal: React.FC<ModalProps> = ({
   return (
     <>
       <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-        <div className="w-3/4 md:w-2/4 bg-[#1A1B1F] rounded-xl">
-          <div className="flex items-center justify-between p-3 rounded-t-xl">
-            <div className="text-lg font-semibold text-white flex-1 text-center">{title}</div>
-              <button className="hover:scale-110 transition"
-              onClick={handleClose}>
+        <div ref={modalRef} className="w-3/4 md:w-2/4">
+          <div className={`translate duration-300 w-full bg-[#1A1B1F] rounded-xl
+            ${showModal ? 'translate-y-0' : 'translate-y-full'}
+            ${showModal ? 'opacity-100' : 'opacity-0'}`}>
+            <div className="flex items-center justify-between p-3 rounded-t-xl">
+              <div className="text-lg font-semibold text-white flex-1 text-center">
+                {title}
+              </div>
+              <button className="hover:scale-110 transition" onClick={handleClose}>
                 <IoMdClose
                   size={35}
                   color="white"
@@ -56,14 +77,16 @@ const Modal: React.FC<ModalProps> = ({
                 />
               </button>
             </div>
-          <div className="px-3 mb-3">
-            {head}
+            <div className="px-3 mb-3">{head}</div>
+            <div className="px-4 max-h-[50vh] overflow-y-auto custom-scrollbar">
+              {body}
+            </div>
+            <div className="h-3"></div>
           </div>
-          <div className="px-4 mb-3 max-h-[50vh] overflow-y-auto custom-scrollbar">{body}</div>
         </div>
       </div>
     </>
   );
-}
+};
 
 export default Modal;

@@ -7,7 +7,7 @@ const Footer = () => {
     <div className="pt-20 pb-10 px-10">
       <div className="mx-auto flex items-center justify-between">
         <div className="text-lg font-bold">
-          Made with <FaHeart className="text-white inline-block" />
+          Made with <FaHeart className="text-violet-500 inline-block" />
         </div>
         <div className="flex items-center space-x-4">
           <a className="text-white cursor-pointer hover:text-white/80

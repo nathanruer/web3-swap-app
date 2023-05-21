@@ -11,10 +11,11 @@ import SelectTokensInModal from "./modals/SelectTokenInModal";
 import SelectTokensOutModal from "./modals/SelectTokenOutModal";
 import useSelectTokenInModal from "../hooks/useSelectTokenInModal";
 import useSelectTokenOutModal from "../hooks/useSelectTokenOutModal";
-import TokenInput from "./TokenInput";
+import Input from "./Input";
 import { useAccount } from "wagmi";
 
 import { CgArrowsExchangeAltV } from 'react-icons/cg';
+import { quoteAmount1Inch } from "../actions/quoteAmount1Inch";
 
 interface SwapProps {
   tokenIn?: Token | null;
@@ -56,12 +57,27 @@ const Swap: React.FC<SwapProps> = ({
     }, { skipNull: true });
     router.push(url);
   }, [router, params]);  
+
+  const [isAmountOutLoading, setisAmountOutLoading] = useState(false);
+  const handleAmountInChange = async () => {
+    if (tokenIn && tokenOut && amountIn) {
+      setisAmountOutLoading(true);
+      const quotedAmountOut = await quoteAmount1Inch(tokenIn.address, tokenOut.address, amountIn);
+      setisAmountOutLoading(false)
+      setAmountOut(quotedAmountOut);
+    }
+  }
+
+  const handleSwap = async () => {
+    console.log('swap!')
+  }
   
 
   return (
     <div className="pt-20 pb-10 px-10">
-      <div className="w-full sm:w-3/4 md:w-2/3 lg:w-1/2 mx-auto rounded-2xl">
-        <TokenInput
+      <div className="w-full sm:w-3/4 md:w-2/3 lg:w-1/2 mx-auto rounded-3xl 
+      bg-neutral-700/10 shadow-xl shadow-[#141619] p-10">
+        <Input
           isConnected={isConnected}
           userAddress={address}
           token={tokenIn}
@@ -69,8 +85,9 @@ const Swap: React.FC<SwapProps> = ({
           label="You sell"
           amount={amountIn}
           setAmount={setAmountIn}
+          handleAmountChange={handleAmountInChange}
           priceCoingecko={priceCoingeckoIn}
-          handlePriceCoingeckoChange={setPriceCoingeckoIn}
+          setPriceCoingecko={setPriceCoingeckoIn}
         />
         <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2">
           <button className="bg-white p-1 rounded-full
@@ -81,21 +98,25 @@ const Swap: React.FC<SwapProps> = ({
             />
           </button>
         </div>
-        <TokenInput
+        <Input
           isConnected={isConnected}
           userAddress={address}
           token={tokenOut}
+          disabled={true}
           modal={selectTokenOutModal}
           label="You buy"
           amount={amountOut}
+          isAmountLoading={isAmountOutLoading}
           setAmount={setAmountOut}
           priceCoingecko={priceCoingeckoOut}
-          handlePriceCoingeckoChange={setPriceCoingeckoOut}
+          setPriceCoingecko={setPriceCoingeckoOut}
         />
 
         {isConnected ? (
-          <button className="flex justify-center w-full mt-4 py-2.5 bg-violet-700
-          rounded-xl hover:opacity-80 transition">
+          <button className="flex justify-center w-full mt-4 py-2.5 
+          bg-gradient-to-r from-violet-500 via-violet-600 to-violet-700 hover:bg-gradient-to-br
+          rounded-xl hover:opacity-80 transition"
+          onClick={handleSwap}>
             Swap
           </button>
         ) : (

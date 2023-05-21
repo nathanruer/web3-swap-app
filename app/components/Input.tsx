@@ -9,28 +9,34 @@ import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 
 import { fetchPriceCoingecko } from "../actions/fetchPriceCoingecko";
 
-interface TokenInputProps {
+interface InputProps {
   isConnected: boolean;
   userAddress: `0x${string}` | undefined
   token?: Token | null;
+  disabled?: boolean;
   modal: any;
   label: string;
   amount: number | undefined;
+  handleAmountChange?: () => void;
+  isAmountLoading?: boolean;
   setAmount: (value: number | undefined) => void;
   priceCoingecko: string;
-  handlePriceCoingeckoChange: (e: string) => void;
+  setPriceCoingecko: (e: string) => void;
 }
 
-const TokenInput: React.FC<TokenInputProps> = ({
+const Input: React.FC<InputProps> = ({
   isConnected,
   userAddress,
   token,
+  disabled,
   modal,
   label,
   amount,
   setAmount,
+  handleAmountChange,
+  isAmountLoading,
   priceCoingecko,
-  handlePriceCoingeckoChange
+  setPriceCoingecko
 }) => {
   const [isFocus, setIsFocus] = useState(false);
 
@@ -41,19 +47,27 @@ const TokenInput: React.FC<TokenInputProps> = ({
     onError() {},
   });
 
+  const [isPriceCoingeckoLoading, setIsPriceCoingeckoLoading] = useState(true);
   useEffect(() => {
     const fetchData = async () => {
       if (token && amount) {
+        setIsPriceCoingeckoLoading(true);
         const result = await fetchPriceCoingecko(token?.coingeckoId, amount);
+        setIsPriceCoingeckoLoading(false);
+
+        if (handleAmountChange) {
+          handleAmountChange()
+        }
+        
         if (result !== null) {
-          handlePriceCoingeckoChange(result);
+          setPriceCoingecko(result);
         }
       }
     };
     fetchData();
   }, [token, amount]);
 
-  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChangeAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseFloat(e.target.value);
     setAmount(isNaN(value) ? undefined : value);
   };
@@ -68,26 +82,33 @@ const TokenInput: React.FC<TokenInputProps> = ({
 
   return (
     <div>
-      {/* SM SCREENS */}
+      {/* MD+ SCREENS */}
       <div className="hidden sm:block">
         <div
-          className={`p-3 justify-center rounded-xl mb-1 bg-[#141619]
-          ${isFocus ? "border border-white" : ""}`}
+          className={`p-3 justify-center rounded-xl mb-1
+          ${isFocus ? "border border-white" : ""}
+          ${disabled ? "bg-transparent" : "bg-[#141619]"}`}
         >
           <p className="text-gray-400 font-semibold text-xs px-2 py-1">{label}</p>
           <div className="flex gap-2 px-1">
-            <input
-              type="number"
-              placeholder="Enter value"
-              value={amount ?? ""}
-              onChange={handleAmountChange}
-              onFocus={() => setIsFocus(true)}
-              onBlur={() => setIsFocus(false)}
-              className="w-full p-2 rounded-xl bg-transparent text-white text-2xl"
-            />
+            {isAmountLoading ? (
+              <div className="animate-pulse w-full h-[32] bg-[#2e3138] rounded-xl"></div>
+            ) : (
+              <input
+                type="number"
+                placeholder={disabled ? "" : "Enter value"}
+                value={amount ?? ""}
+                onChange={onChangeAmount}
+                onFocus={() => setIsFocus(true)}
+                onBlur={() => setIsFocus(false)}
+                className="w-full p-2 rounded-xl bg-transparent text-white text-2xl"
+                disabled={disabled}
+              />
+            )}
             <button
-              className="flex w-full sm:w-[250px] text-white bg-[#222429] py-2 px-4 
+              className={`flex w-full sm:w-[250px] text-white py-2 px-4 
               hover:bg-[#2e3138] transition rounded-xl items-center justify-between"
+              ${disabled ? "bg-[#141619]" : "bg-[#222429]"}`}
               onClick={modal.onOpen}
             >
               {token ? token.symbol : "Select Token"} <MdOutlineKeyboardArrowDown />
@@ -96,13 +117,21 @@ const TokenInput: React.FC<TokenInputProps> = ({
             {token && (
               <div className={`flex ${amount ? "justify-between" : "justify-end"}`}>
                 {amount ? (
-                  <p className="px-2 mt-2 text-gray-400 font-semibold text-xs">~${priceCoingecko}</p>
+                  <div className="px-2 mt-2 text-xs">
+                    {isPriceCoingeckoLoading || isAmountLoading ? (
+                      <div className="animate-pulse w-[75px] h-[16px] bg-[#2e3138] rounded-xl"></div>
+                    ) : (
+                      amount && (
+                        <p className="text-gray-400 font-semibold">~${priceCoingecko}</p>
+                      )
+                    )}
+                  </div>
                 ) : null}
                 {isConnected ? (
                   <div className="px-2 mt-2 text-xs">
                     <div className="text-gray-400">
                       {isTokenBalanceLoading ? (
-                        <p>Balance loading...</p>
+                        <div className="animate-pulse w-[100px] h-[16px] bg-[#222429] rounded"></div>
                       ) : 
                       <div className="flex gap-2">
                         <p>Balance : {tokenBalance?.formatted}</p>
@@ -120,7 +149,7 @@ const TokenInput: React.FC<TokenInputProps> = ({
         </div>
       </div>
 
-      {/* MD AND LG SCREENS */}
+      {/* SM SCREENS */}
       <div className="block sm:hidden">
         <div className={`p-3 justify-center text-black rounded-xl mb-1 bg-[#141619]
         ${isFocus ? "border border-white" : ""}`}>
@@ -137,7 +166,7 @@ const TokenInput: React.FC<TokenInputProps> = ({
               type="number"
               placeholder="Enter value"
               value={amount ?? ""}
-              onChange={handleAmountChange}
+              onChange={onChangeAmount}
               onFocus={() => setIsFocus(true)}
               onBlur={() => setIsFocus(false)}
               className="w-full px-2 py-1 rounded-xl bg-transparent text-white text-2xl"
@@ -146,13 +175,21 @@ const TokenInput: React.FC<TokenInputProps> = ({
           {token && (
             <div className={`flex ${amount ? "justify-between" : "justify-end"}`}>
               {amount ? (
-                <p className="px-2 mt-2 text-gray-400 font-semibold text-xs">~${priceCoingecko}</p>
+                <div className="px-2 mt-2 text-xs">
+                  {isPriceCoingeckoLoading ? (
+                    <div className="animate-pulse w-[75px] h-[16px] bg-[#222429] rounded"></div>
+                  ) : (
+                    amount && (
+                      <p className="text-gray-400 font-semibold">~${priceCoingecko}</p>
+                    )
+                  )}
+                </div>
               ) : null}
               {isConnected ? (
                 <div className="px-2 mt-2 text-xs">
                   <div className="text-gray-400">
                     {isTokenBalanceLoading ? (
-                      <p>Balance loading...</p>
+                      <div className="animate-pulse w-[75px] h-[16px] bg-[#222429] rounded"></div>
                     ) : 
                     <div className="flex gap-2">
                       <p>Balance : {tokenBalance?.formatted}</p>
@@ -173,4 +210,4 @@ const TokenInput: React.FC<TokenInputProps> = ({
   );
 };
 
-export default TokenInput;
+export default Input;
