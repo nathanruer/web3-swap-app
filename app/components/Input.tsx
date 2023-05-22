@@ -65,7 +65,7 @@ const Input: React.FC<InputProps> = ({
       }
     };
     fetchData();
-  }, [token, amount, handleAmountChange, setPriceCoingecko]);
+  }, [token, amount]);
 
   const onChangeAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.stopPropagation();

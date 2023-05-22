@@ -1,10 +1,15 @@
 'use client';
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import qs from 'query-string';
 import { useRouter, useSearchParams } from "next/navigation";
+import axios from "axios";
+
+import { ethers } from 'ethers';
+import { getTokenDecimals } from "../actions/getTokenDecimals";
 
 import { useConnectModal } from '@rainbow-me/rainbowkit';
+import { useSendTransaction, useWaitForTransaction } from "wagmi";
 
 import { Token } from "../types/Token";
 import SelectTokensInModal from "./modals/SelectTokenInModal";
@@ -72,11 +77,47 @@ const Swap: React.FC<SwapProps> = ({
       setPath(quote.path);
     }
   };
+
+  const [txDetails, setTxDetails] = useState({
+    to: undefined,
+    data: undefined,
+    value: undefined,
+  });
+  
+  const { data, sendTransaction } = useSendTransaction({
+    mode: 'recklesslyUnprepared',
+    request: {
+      from: address,
+      to: txDetails.to,
+      data: txDetails.data,
+      value: txDetails.value,
+    },
+  });
+  const { isLoading, isSuccess } = useWaitForTransaction({
+    hash: data?.hash,
+  })
+  
+  useEffect(() => {
+    if (txDetails.to && txDetails.data && txDetails.value && isConnected) {
+      sendTransaction();
+    }
+  }, [txDetails]);
   
   const handleSwap = async () => {
-    console.log('swap!')
-  }
-  
+    if (tokenIn && tokenOut && amountIn) {
+      const allowance = await axios.get(`https://api.1inch.io/v5.0/1/approve/allowance?tokenAddress=${tokenIn?.address}&walletAddress=${address}`);
+    
+      if (allowance.data.allowance === "0") {
+        const approve = await axios.get(`https://api.1inch.io/v5.0/1/approve/transaction?tokenAddress=${tokenIn?.address}`);
+        setTxDetails(approve.data);
+        return;
+      }
+
+      const tx = await axios.get(`https://api.1inch.io/v5.0/1/swap?fromTokenAddress=${tokenIn?.address}&toTokenAddress=${tokenOut?.address}&amount=${ethers.utils.parseUnits(amountIn.toString(), 'ether')}&fromAddress=${address}&slippage=5`)
+      // setTxDetails(tx.data.tx);
+    }
+  };  
+
 
   return (
     <div className="p-10">
