@@ -9,8 +9,10 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { Token } from "../types/Token";
 import SelectTokensInModal from "./modals/SelectTokenInModal";
 import SelectTokensOutModal from "./modals/SelectTokenOutModal";
+import PathModal from "./modals/PathModal";
 import useSelectTokenInModal from "../hooks/useSelectTokenInModal";
 import useSelectTokenOutModal from "../hooks/useSelectTokenOutModal";
+import usePathModal from "../hooks/usePathModal";
 import Input from "./Input";
 import { useAccount } from "wagmi";
 
@@ -58,23 +60,26 @@ const Swap: React.FC<SwapProps> = ({
     router.push(url);
   }, [router, params]);  
 
+  const [path, setPath] = useState<Array<{ name: string; percentage: string; tokens: { from: string; to: string; }; }>>([]);
+  const pathModal = usePathModal()
   const [isAmountOutLoading, setisAmountOutLoading] = useState(false);
   const handleAmountInChange = async () => {
     if (tokenIn && tokenOut && amountIn) {
       setisAmountOutLoading(true);
-      const quotedAmountOut = await quoteAmount1Inch(tokenIn.address, tokenOut.address, amountIn);
-      setisAmountOutLoading(false)
-      setAmountOut(quotedAmountOut);
+      const quote = await quoteAmount1Inch(tokenIn.address, tokenOut.address, amountIn);
+      setisAmountOutLoading(false);
+      setAmountOut(quote.amountOut);
+      setPath(quote.path);
     }
-  }
-
+  };
+  
   const handleSwap = async () => {
     console.log('swap!')
   }
   
 
   return (
-    <div className="pt-20 pb-10 px-10">
+    <div className="p-10">
       <div className="w-full sm:w-3/4 md:w-2/3 lg:w-1/2 mx-auto rounded-3xl 
       bg-neutral-700/10 shadow-xl shadow-[#141619] p-10">
         <Input
@@ -111,6 +116,21 @@ const Swap: React.FC<SwapProps> = ({
           priceCoingecko={priceCoingeckoOut}
           setPriceCoingecko={setPriceCoingeckoOut}
         />
+        
+        {path.length > 0 && (
+          isAmountOutLoading ? (
+            <a className="flex justify-center w-full mt-4 py-2.5 bg-[#141619]
+            rounded-xl hover:opacity-80 transition">
+              Quoting the best path...
+            </a>
+          ) : (
+            <button className="flex justify-center w-full mt-4 py-2.5 bg-[#141619]
+            rounded-xl hover:opacity-80 transition"
+            onClick={pathModal.onOpen}>
+              Display the swap pathing
+            </button>
+          )
+        )}
 
         {isConnected ? (
           <button className="flex justify-center w-full mt-4 py-2.5 
@@ -133,6 +153,11 @@ const Swap: React.FC<SwapProps> = ({
         />
         <SelectTokensOutModal 
           allTokens={allTokens} 
+        />
+        <PathModal 
+          tokenIn={tokenIn}
+          tokenOut={tokenOut}
+          path={path}
         />
         
       </div>

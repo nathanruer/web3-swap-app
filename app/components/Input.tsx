@@ -68,6 +68,7 @@ const Input: React.FC<InputProps> = ({
   }, [token, amount]);
 
   const onChangeAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.stopPropagation();
     const value = parseFloat(e.target.value);
     setAmount(isNaN(value) ? undefined : value);
   };
@@ -92,7 +93,7 @@ const Input: React.FC<InputProps> = ({
           <p className="text-gray-400 font-semibold text-xs px-2 py-1">{label}</p>
           <div className="flex gap-2 px-1">
             {isAmountLoading ? (
-              <div className="animate-pulse w-full h-[32] bg-[#2e3138] rounded-xl"></div>
+              <div className="animate-pulse w-full h-[32] bg-[#2e3138] rounded-xl px-2"></div>
             ) : (
               <input
                 type="number"
@@ -101,17 +102,17 @@ const Input: React.FC<InputProps> = ({
                 onChange={onChangeAmount}
                 onFocus={() => setIsFocus(true)}
                 onBlur={() => setIsFocus(false)}
-                className="w-full p-2 rounded-xl bg-transparent text-white text-2xl"
+                className="w-full px-2 rounded-xl bg-transparent text-white text-2xl"
                 disabled={disabled}
               />
             )}
-            <button
-              className={`flex w-full sm:w-[250px] text-white py-2 px-4 
-              hover:bg-[#2e3138] transition rounded-xl items-center justify-between"
-              ${disabled ? "bg-[#141619]" : "bg-[#222429]"}`}
-              onClick={modal.onOpen}
-            >
+            <button className={`flex w-full sm:w-[250px] text-white py-2 px-4 
+            transition rounded-xl items-center justify-center"
+            ${disabled ? "bg-[#141619] hover:bg-[#181b1f]" : "bg-[#222429] hover:bg-[#2e3138]"}`}
+            onClick={modal.onOpen}>
+              <div className="flex w-full items-center justify-between">
               {token ? token.symbol : "Select Token"} <MdOutlineKeyboardArrowDown />
+              </div>
             </button>
           </div>
             {token && (
@@ -151,32 +152,37 @@ const Input: React.FC<InputProps> = ({
 
       {/* SM SCREENS */}
       <div className="block sm:hidden">
-        <div className={`p-3 justify-center text-black rounded-xl mb-1 bg-[#141619]
-        ${isFocus ? "border border-white" : ""}`}>
+        <div className={`p-3 justify-center rounded-xl mb-1
+        ${isFocus ? "border border-white" : ""}
+        ${disabled ? "bg-transparent" : "bg-[#141619]"}`}>
           <p className="text-gray-400 font-semibold text-xs px-2 py-1">{label}</p>
           <div className="grid gap-2 px-1 py-2">
-            <button
-              className="flex w-full sm:w-[250px] text-white bg-[#222429] py-2 px-4 
-              hover:bg-[#2e3138] transition rounded-xl items-center justify-between"
-              onClick={modal.onOpen}
-            >
+            <button className={`flex w-full sm:w-[250px] text-white py-2 px-4 
+            transition rounded-xl items-center justify-center"
+            ${disabled ? "bg-[#141619] hover:bg-[#181b1f]" : "bg-[#222429] hover:bg-[#2e3138]"}`}
+            onClick={modal.onOpen}>
               {token ? token.symbol : "Select Token"} <MdOutlineKeyboardArrowDown />
             </button>
-            <input
-              type="number"
-              placeholder="Enter value"
-              value={amount ?? ""}
-              onChange={onChangeAmount}
-              onFocus={() => setIsFocus(true)}
-              onBlur={() => setIsFocus(false)}
-              className="w-full px-2 py-1 rounded-xl bg-transparent text-white text-2xl"
-            />
+            {isAmountLoading ? (
+              <div className="animate-pulse w-full h-[32] bg-[#2e3138] rounded-xl px-2"></div>
+            ) : (
+              <input
+                type="number"
+                placeholder={disabled ? "" : "Enter value"}
+                value={amount ?? ""}
+                onChange={onChangeAmount}
+                onFocus={() => setIsFocus(true)}
+                onBlur={() => setIsFocus(false)}
+                className="w-full px-2 rounded-xl bg-transparent text-white text-2xl"
+                disabled={disabled}
+              />
+            )}
           </div>
           {token && (
             <div className={`flex ${amount ? "justify-between" : "justify-end"}`}>
               {amount ? (
                 <div className="px-2 mt-2 text-xs">
-                  {isPriceCoingeckoLoading ? (
+                  {isPriceCoingeckoLoading || isAmountLoading ? (
                     <div className="animate-pulse w-[75px] h-[16px] bg-[#222429] rounded"></div>
                   ) : (
                     amount && (
