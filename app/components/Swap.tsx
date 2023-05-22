@@ -81,7 +81,7 @@ const Swap: React.FC<SwapProps> = ({
   return (
     <div className="p-10">
       <div className="w-full sm:w-3/4 md:w-2/3 lg:w-1/2 mx-auto rounded-3xl 
-      bg-neutral-700/10 shadow-xl shadow-[#141619] p-10">
+      bg-neutral-700/10 shadow-2xl shadow-[#141619] p-10">
         <Input
           isConnected={isConnected}
           userAddress={address}

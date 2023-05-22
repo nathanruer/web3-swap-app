@@ -52,11 +52,6 @@ const wagmiClient = createClient({
 
 const inter = Inter({ subsets: ['latin'] })
 
-export const metadata = {
-  title: 'Swap App',
-  description: 'By Nathan Ruer',
-}
-
 export default function RootLayout({
   children,
 }: {
