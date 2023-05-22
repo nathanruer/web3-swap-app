@@ -6,6 +6,11 @@ import ClientOnly from "./components/ClientOnly";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
+export const metadata = {
+  title: 'Swap App',
+  description: 'By Nathan Ruer',
+}
+
 interface HomeProps {
   searchParams: IPathParams
 };

@@ -27,28 +27,28 @@ const PathModal: React.FC<PathModalProps> = ({
   const bodyContent = (
     <ul className="mt-4 flex">
       {path?.map((step, index) => (
-        <div className='flex items-center w-full'>
-          <li key={index} className="py-2">
+        <div className='flex items-center w-full' key={index}>
+          <li className="py-2">
             <p className="text-lg font-bold">Protocol:</p> {step.name}<br />
             <p className="text-lg font-bold">Percentage:</p> {step.percentage}<br />
             <p className="text-lg font-bold">Swap: </p>
             <div className='flex gap-1'>
               <a>
-              {step.tokens.from === 'tokenIn'
-                ? tokenIn?.symbol
-                : step.tokens.from === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
-                  ? 'ETH'
-                  : getTokenSymbol(step.tokens.from, provider)
-              }
+                {step.tokens.from === 'tokenIn'
+                  ? tokenIn?.symbol
+                  : step.tokens.from === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+                    ? 'ETH'
+                    : getTokenSymbol(step.tokens.from, provider)
+                }
               </a>
               <a>to</a>
               <a>
-              {step.tokens.to === 'tokenOut'
-                ? tokenOut?.symbol
-                : step.tokens.to === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
-                  ? 'ETH'
-                  : getTokenSymbol(step.tokens.to, provider)
-              }
+                {step.tokens.to === 'tokenOut'
+                  ? tokenOut?.symbol
+                  : step.tokens.to === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+                    ? 'ETH'
+                    : getTokenSymbol(step.tokens.to, provider)
+                }
               </a>
             </div>
           </li>

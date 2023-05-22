@@ -35,7 +35,7 @@ const SelectTokenInModal: React.FC<SelectTokenInModalProps> = ({
     }, { skipNull: true });
     router.push(url);
     selectTokensModal.onClose();
-  }, [router, params]);
+  }, [router, params, selectTokensModal]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(event.target.value);
